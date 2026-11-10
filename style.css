@@ -1,0 +1,482 @@
+@import url('https://fonts.cdnfonts.com/css/poppins');
+@import url('https://fonts.cdnfonts.com/css/ica-rubrik-black');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  background-color: #0b090a;
+  scroll-behavior: smooth;
+}
+/* Styling for the first section */
+
+  #hero-section {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: visible; /* Ensures the blurred edges of the background don't get cut off */
+    
+   display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 60px 20px;
+  }
+
+/* Make sure your typography styles stay crisp and on top */
+#hero-section h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #f5ebe0; /* Soft warm latte cream */
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 10;
+    margin-bottom: 10px;
+    text-align: center;
+}
+#hero-section p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    color: #d6ccc2; /* Soft light warm sand/latte */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 10;
+    margin-bottom: 40px; /* Generates a clean gap before the carousel starts */
+    text-align: center;
+}
+
+
+/* This handles the blurry background image */
+#hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  
+  /* Blends into the dark body bg at the bottom for a seamless transition */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 75%, #0b090a 100%), url('images/cafebg.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  /* The Magic Juice: Adjust the px amount to change blur strength */
+  filter: blur(2px); 
+  
+  /* Forces the blurred edges to stretch slightly so you don't get white halos */
+  transform: scale(1.05); 
+  z-index: 1;
+}
+
+/* This forces your text to stay cleanly stacked on top of the blur */
+#hero-section h1, #hero-section p {
+  position: relative;
+  z-index: 2;
+}
+
+
+
+.banner {
+    width: 100%;
+    /* 2. Give the banner a dedicated tall track so the 3D space stays within bounds */
+    height: 100vh; 
+    position: relative;
+    
+    perspective: 1500px;
+
+    z-index:5;
+    overflow: hidden; /* Ensures the 3D cards don't spill out of the banner */
+}
+
+/* 3. The Rotating Track */
+.banner .slider {
+    position: absolute;
+    width: 240px;  /* Scaled down so cards fit beautifully on screen */
+    height: 320px; 
+    top: 45%;
+    left: 50%;
+    
+    /* Centers the core axis of the wheel */
+    transform: perspective(1500px) translate(-50%, -50%) rotateX(-6deg); 
+    transform-style: preserve-3d;
+    
+    /* THE MAGIC: Runs the rotation infinitely */
+    animation: spinCarousel 20s linear infinite; 
+}
+
+
+/* 4. The 3D Cards */
+.banner .slider .item {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    
+    /* Spreads 9 cards out in a perfect ring. 
+       Reduced translateZ to 380px so the wheel spins comfortably within view */
+    transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(420px);
+    
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+
+    will-change: transform;
+    
+
+
+}
+
+.banner .slider .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Beautiful dark gradient overlay for text readability */
+.banner .slider .item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.1) 60%, rgba(0, 0, 0, 0) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Styled card titles on top of each card image */
+.banner .slider .item h2 {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.9);
+    color: var(--text-color, white);
+    z-index: 3;
+    width: 100%;
+    text-align: center;
+    padding: 0 10px;
+    pointer-events: none;
+}
+
+/* 5. The Automatic Spinning Animation */
+@keyframes spinCarousel {
+    from {
+          transform: translate(-50%, -50%) rotateX(-12deg) rotateY(0deg);
+    }
+    to {
+         transform: translate(-50%, -50%) rotateX(-12deg) rotateY(360deg);
+    }
+}
+/* --- THE LAYOUT FOR BOTTOM TEXT (CENTERED STACK) --- */
+
+#hero-section .banner .content {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1400px, 100vw);
+    height: 100%; /* Stretches the parent container to map the full section height */
+    padding: 0 20px 40px 20px; /* Space at the bottom */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Push to the foot of the section */
+    align-items: center; /* Center horizontally */
+    z-index: 10;
+    pointer-events: none; /* Prevents this full-screen wrapper from blocking image clicks */
+}
+
+/* Restores cursor actions exclusively for text links and headings */
+#hero-section .banner .content h1,
+#hero-section .banner .content .addons {
+    pointer-events: auto;
+}
+
+/* --- THE TYPOGRAPHY MANAGEMENT --- */
+
+#hero-section .banner .content h1 {
+    font-family: 'Ica Rubrik Black', sans-serif;
+    font-size: 6rem; /* Sized for perfect layout stability and centering */
+    line-height: 0.9em;
+    color: #786047 !important; /* Warm coffee latte cream color */
+    text-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); /* Text shadow to pop out from dark background */
+    position: relative;
+    margin: 0;
+    text-align: center;
+}
+
+#hero-section .banner .content h1::after {
+    position: absolute;
+    inset: 0 0 0 0;
+    content: attr(data-content);
+    
+    /* 3. THE TEXT OVERLAY: z-index 4 lifts the transparent outline over the front cards */
+    z-index: 4; 
+    -webkit-text-stroke: 2px #211818 !important; /* Crisp white outline */
+    color: transparent !important;
+}
+
+#hero-section .banner .content .addons {
+    font-family: 'Poppins', sans-serif;
+    text-align: center; /* Center h2 and p */
+    max-width: 600px;
+    margin-top: 15px; /* Spacing directly below the h1 */
+    margin-bottom: 0;
+}
+
+#hero-section .banner .content .addons h2 {
+    font-size: 2.2em;
+    color: #977d62 !important; /* Rich warm caramel accent color */
+    font-weight: 800;
+    text-transform: uppercase;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    margin: 0;
+}
+
+#hero-section .banner .content .addons p {
+    font-size: 1.1rem;
+    color: #f5ebe0 !important; /* Soft cream color for high readability and warmth */
+    margin-top: 6px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* --- THE LAYERED VASE (CENTERED IN 3D SLIDER CAROUSEL) --- */
+
+/* --- 3. THE FIXED STACK VASE (PERFECT ASPECT SCALE) --- */
+.banner .slider .vase {
+    background-image: url('images/vase.png');
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    /* Make the vase sufficiently tall so it pops out above and below the 320px high slider */
+    width: 380px;
+    height: 520px; 
+    
+    /* Center the vase using negative margins instead of transform translates. 
+       This prevents 3D transform origin mismatch and stops any wobbling/shifting. */
+    margin-left: -190px; /* -width / 2 */
+    margin-top: -260px;  /* -height / 2 */
+    
+    background-size: contain; 
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    /* Center the vase and counter-rotate it so it always faces the camera */
+    animation: counterSpin 20s linear infinite;
+    
+    /* Prevent blocking clicks on interactive slider cards behind the vase */
+    pointer-events: none;
+}
+
+/* Counter-spin animation to cancel out parent slider's rotation and tilt */
+@keyframes counterSpin {
+    from {
+        transform: rotateY(0deg) rotateX(12deg);
+    }
+    to {
+        transform: rotateY(-360deg) rotateX(12deg);
+    }
+}
+
+
+
+
+/* Styling for the second section */
+#drinks-section {
+  position: relative; /* Required to anchor the background */
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 80px 20px 40px 20px;
+  overflow: hidden; /* Keeps the blurred edges from spilling out */
+}
+
+/* This handles the blurry background image */
+#drinks-section::before {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  
+  /* Blends from dark body bg at the top for a seamless transition */
+  background-image: linear-gradient(to bottom, #0b090a 0%, rgba(0, 0, 0, 0.45) 25%, rgba(0, 0, 0, 0.45) 100%), url('images/beachbg.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  /* The Magic Juice: Adjust the px amount to change blur strength */
+  filter: blur(2px); 
+  
+  /* Forces the blurred edges to stretch slightly so you don't get white halos */
+  transform: scale(1.05); 
+  z-index: 1;
+}
+
+/* This forces your text to stay cleanly stacked on top of the blur */
+#drinks-section h2, #drinks-section p {
+  position: relative;
+  z-index: 10;
+}
+
+#drinks-section h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #f5ebe0; /* Soft sand cream matching the hero section */
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#drinks-section p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  color: #e0d0c0; /* Soft muted beige matching the beach theme */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  margin-bottom: 30px;
+  max-width: 600px;
+}
+
+.banner2 {
+  width: 100%;
+  height: 550px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  z-index: 5;
+}
+
+.banner2 .product {
+  width: 100%;
+  max-width: 1000px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  --left: 0px;
+}
+
+.banner2 .product .soda {
+  /* Step 1: Explicitly define the two image layers in order (Top layer first) */
+  background-image: 
+      var(--url), 
+      url('images/canlast.png');
+
+  /* Step 2: Prevent repeating patterns on the silver mockup frame */
+  background-repeat: repeat, no-repeat;
+
+  /* Step 3: Explicitly align both layers to the exact same origin */
+  background-position: calc(var(--x-pos, 50%) + var(--left)) 0, center center;
+
+  /* Step 4: Lock the sizing constraints to fit perfectly */
+  background-size: 900px 100%, contain;
+
+  /* Step 5: Keep your blending configurations unchanged */
+  background-blend-mode: multiply; 
+  
+  aspect-ratio: 2 / 4;
+  width: 250px;
+  height: 500px;
+  
+  mask-image: url('images/canlast.png');
+  mask-size: auto 100%;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url('images/canlast.png');
+  -webkit-mask-size: auto 100%;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -250px;  /* -height / 2, anchors the can to the container's true center */
+  margin-left: -125px; /* -width / 2 */
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), background-position 0.8s ease;
+}
+
+/* Positioning cans to overlap in the center */
+/* Coke (first can) - left/back */
+.banner2 .product .soda:nth-child(1) {
+  transform: translateX(-180px) rotate(-12deg);
+  z-index: 2;
+  --x-pos: 50%;
+}
+
+/* Pepsi (second can) - left-center */
+.banner2 .product .soda:nth-child(2) {
+  transform: translateX(-90px) rotate(-6deg);
+  z-index: 3;
+  --x-pos:105%;
+}
+
+/* Monster (third can) - center/middle */
+.banner2 .product .soda:nth-child(3) {
+  transform: translateX(0px) rotate(0deg);
+  z-index: 4;
+  --x-pos: 111%;
+}
+
+/* Sprite (fourth can) - right-center */
+.banner2 .product .soda:nth-child(4) {
+  transform: translateX(90px) rotate(6deg);
+  z-index: 5;
+}
+
+/* Fanta (fifth can) - right/front */
+.banner2 .product .soda:nth-child(5) {
+  transform: translateX(180px) rotate(12deg);
+  z-index: 6;
+}
+
+/* Hover animations: cans slide apart on hover */
+.banner2 .product:hover {
+  --left: -230px; 
+}
+
+.banner2 .product:hover .soda:nth-child(1) {
+  transform: translateX(-340px) rotate(-20deg);
+}
+
+.banner2 .product:hover .soda:nth-child(2) {
+  transform: translateX(-170px) rotate(-10deg);
+}
+
+/* Center can (Monster) shifts slightly up and scales on hover */
+.banner2 .product:hover .soda:nth-child(3) {
+  transform: translateX(0px) translateY(-20px) scale(1.05);
+  z-index: 7;
+}
+
+.banner2 .product:hover .soda:nth-child(4) {
+  transform: translateX(170px) rotate(10deg);
+z-index:6;
+}
+
+.banner2 .product:hover .soda:nth-child(5) {
+  transform: translateX(340px) rotate(20deg);
+  z-index:5;
+}
